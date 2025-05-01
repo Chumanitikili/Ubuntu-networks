@@ -13,6 +13,8 @@ import {
   Menu,
   X,
   Home,
+  HelpCircle,
+  Search,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -36,26 +38,54 @@ export function Sidebar({ className }: SidebarProps) {
         className
       )}
     >
-      <div className="flex items-center justify-between px-3 py-4 border-b border-sidebar-border">
+      {/* Logo section */}
+      <div className="flex items-center justify-between px-3 py-5 border-b border-sidebar-border">
         <div className={cn("flex items-center gap-2", isCollapsed && "hidden")}>
-          <Phone className="h-5 w-5 text-sidebar-primary" />
-          <h2 className="font-bold text-lg text-sidebar-foreground">Smart Call Nexus</h2>
+          <div className="bg-sidebar-accent rounded-md p-1">
+            <Phone className="h-5 w-5 text-white" />
+          </div>
+          <h2 className="font-medium text-lg text-sidebar-foreground">Smart Call Nexus</h2>
         </div>
         
-        <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-sidebar-foreground hover:bg-sidebar-accent/20">
+        <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-sidebar-foreground hover:bg-sidebar-border/50">
           {isCollapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
         </Button>
       </div>
       
-      <div className="flex flex-col gap-2 p-3">
+      {/* Search bar (Zendesk-like) */}
+      {!isCollapsed && (
+        <div className="px-3 py-3 border-b border-sidebar-border">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-sidebar-foreground/60" />
+            <input 
+              className="w-full bg-sidebar-border/30 border-0 rounded-md pl-9 pr-3 py-2 text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/60 focus:outline-none focus:ring-1 focus:ring-sidebar-accent"
+              placeholder="Search..." 
+            />
+          </div>
+        </div>
+      )}
+      
+      {/* Navigation items */}
+      <div className="flex flex-col gap-1 p-2 overflow-y-auto flex-1">
         <NavItem icon={<Home />} label="Dashboard" isCollapsed={isCollapsed} isActive={true} />
         <NavItem icon={<Phone />} label="Call Center" isCollapsed={isCollapsed} />
         <NavItem icon={<Users />} label="Agents" isCollapsed={isCollapsed} />
-        <NavItem icon={<MessageCircle />} label="Leads" isCollapsed={isCollapsed} />
+        <NavItem icon={<MessageCircle />} label="Conversations" isCollapsed={isCollapsed} />
         <NavItem icon={<Calendar />} label="Appointments" isCollapsed={isCollapsed} />
         <NavItem icon={<BarChart2 />} label="Analytics" isCollapsed={isCollapsed} />
         <NavItem icon={<Bot />} label="AI Assistant" isCollapsed={isCollapsed} />
+        
+        {/* Zendesk-like category separator */}
+        <div className={cn("mt-4 mb-2 px-3", isCollapsed && "hidden")}>
+          <span className="text-xs font-medium uppercase text-sidebar-foreground/50">Admin</span>
+        </div>
+        
         <NavItem icon={<Settings />} label="Settings" isCollapsed={isCollapsed} />
+      </div>
+      
+      {/* Help section at bottom (Zendesk-like) */}
+      <div className="p-2 border-t border-sidebar-border">
+        <NavItem icon={<HelpCircle />} label="Help & Support" isCollapsed={isCollapsed} />
       </div>
     </div>
   );
@@ -73,13 +103,11 @@ function NavItem({ icon, label, isCollapsed, isActive }: NavItemProps) {
     <Button
       variant="ghost"
       className={cn(
-        "w-full justify-start py-2 px-3 transition-all hover:bg-sidebar-accent/20",
-        isActive 
-          ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-          : "text-sidebar-foreground hover:text-sidebar-accent-foreground"
+        "zendesk-sidebar-item w-full justify-start py-2 px-3",
+        isActive && "active"
       )}
     >
-      <span className="mr-2">{icon}</span>
+      <span className="text-current">{icon}</span>
       {!isCollapsed && <span>{label}</span>}
     </Button>
   );

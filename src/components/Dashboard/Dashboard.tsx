@@ -16,31 +16,52 @@ import {
 
 export default function Dashboard() {
   return (
-    <div className="space-y-8 p-6 md:p-8">
-      <h1 className="text-3xl font-bold text-foreground mb-6 hidden md:block">Dashboard</h1>
+    <div className="p-5 md:p-6 space-y-6">
+      <h1 className="text-2xl font-medium text-foreground mb-4 hidden md:block">Welcome to Smart Call Nexus</h1>
       
-      <DashboardHeader stats={sampleDashboardStats} />
+      {/* Top stats bar */}
+      <div className="zendesk-card p-0 overflow-hidden">
+        <DashboardHeader stats={sampleDashboardStats} />
+      </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <CallsChart stats={sampleDashboardStats} />
-        <div className="md:col-span-1 space-y-6">
-          <ActiveCallsList calls={sampleCalls} />
-          <AIAssistantCard assistant={sampleAIAssistants[0]} />
+      {/* Main content grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
+        {/* Left column - 3/4 width */}
+        <div className="lg:col-span-3 space-y-5">
+          <div className="zendesk-card p-5">
+            <CallsChart stats={sampleDashboardStats} />
+          </div>
+          
+          <div className="zendesk-card p-5">
+            <RecentCallsList calls={sampleCalls} />
+          </div>
+        </div>
+        
+        {/* Right column - 1/4 width */}
+        <div className="space-y-5">
+          <div className="zendesk-card p-5">
+            <ActiveCallsList calls={sampleCalls} />
+          </div>
+          
+          <div className="zendesk-card p-5">
+            <AIAssistantCard assistant={sampleAIAssistants[0]} />
+          </div>
+          
+          <div className="zendesk-card p-5">
+            <InboundSimulator />
+          </div>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
-          <RecentCallsList calls={sampleCalls} />
+      {/* Bottom row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="zendesk-card p-5">
+          <AgentsList agents={sampleAgents} />
         </div>
-        <div className="space-y-6">
-          <InboundSimulator />
+        
+        <div className="zendesk-card p-5">
           <CallWorkflow />
         </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <AgentsList agents={sampleAgents} />
       </div>
     </div>
   );

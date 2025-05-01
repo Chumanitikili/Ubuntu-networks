@@ -5,83 +5,83 @@
 
 @layer base {
   :root {
-    --background: 250 100% 99%;
-    --foreground: 260 25% 20%;
+    --background: 195 10% 97%; /* Zendesk light background */
+    --foreground: 188 73% 12%; /* Zendesk text color */
 
-    --card: 0 0% 100%;
-    --card-foreground: 260 25% 20%;
+    --card: 0 0% 100%; /* White for cards */
+    --card-foreground: 188 73% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 260 25% 20%;
+    --popover-foreground: 188 73% 12%;
 
-    --primary: 265 89% 65%;
+    --primary: 188 53% 12%; /* Zendesk primary green */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 265 40% 55%;
+    --secondary: 196 44% 19%; /* Zendesk secondary green */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 250 20% 96%;
-    --muted-foreground: 260 10% 55%;
+    --muted: 196 12% 60%; /* Zendesk muted gray */
+    --muted-foreground: 196 20% 45%;
 
-    --accent: 310 90% 60%;
+    --accent: 204 70% 42%; /* Zendesk accent blue */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 356 75% 53%; /* Zendesk red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 260 20% 90%;
-    --input: 260 20% 90%;
-    --ring: 265 89% 65%;
+    --border: 196 18% 88%;
+    --input: 196 18% 88%;
+    --ring: 204 70% 42%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem; /* Zendesk uses more subtle rounded corners */
 
-    --sidebar-background: 265 40% 20%;
-    --sidebar-foreground: 255 40% 90%;
-    --sidebar-primary: 265 89% 65%;
+    --sidebar-background: 195 36% 13%; /* Zendesk dark sidebar */
+    --sidebar-foreground: 196 18% 90%;
+    --sidebar-primary: 204 70% 42%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 310 90% 60%;
+    --sidebar-accent: 32 88% 62%; /* Zendesk orange */
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 265 50% 30%;
-    --sidebar-ring: 265 89% 65%;
+    --sidebar-border: 196 30% 20%;
+    --sidebar-ring: 204 70% 42%;
   }
 
   .dark {
-    --background: 260 25% 10%;
-    --foreground: 250 20% 96%;
+    --background: 188 30% 10%;
+    --foreground: 196 18% 90%;
 
-    --card: 260 25% 12%;
-    --card-foreground: 250 20% 96%;
+    --card: 188 27% 12%;
+    --card-foreground: 196 18% 90%;
 
-    --popover: 260 25% 12%;
-    --popover-foreground: 250 20% 96%;
+    --popover: 188 27% 12%;
+    --popover-foreground: 196 18% 90%;
 
-    --primary: 265 89% 65%;
+    --primary: 204 70% 42%; /* Zendesk blue */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 265 40% 40%;
+    --secondary: 196 44% 19%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 260 25% 18%;
-    --muted-foreground: 250 20% 80%;
+    --muted: 188 27% 20%;
+    --muted-foreground: 196 18% 80%;
 
-    --accent: 310 90% 60%;
+    --accent: 32 88% 62%; /* Zendesk orange */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 40.6%;
+    --destructive: 356 75% 53%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 260 25% 25%;
-    --input: 260 25% 25%;
-    --ring: 265 89% 65%;
+    --border: 188 27% 20%;
+    --input: 188 27% 20%;
+    --ring: 204 70% 42%;
     
-    --sidebar-background: 265 40% 15%;
-    --sidebar-foreground: 255 40% 90%;
-    --sidebar-primary: 265 89% 65%;
+    --sidebar-background: 195 40% 8%;
+    --sidebar-foreground: 196 18% 90%;
+    --sidebar-primary: 204 70% 42%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 310 90% 60%;
+    --sidebar-accent: 32 88% 62%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 265 50% 25%;
-    --sidebar-ring: 265 89% 65%;
+    --sidebar-border: 196 33% 15%;
+    --sidebar-ring: 204 70% 42%;
   }
 }
 
@@ -127,19 +127,55 @@
   }
   
   .dashboard-icon {
-    @apply h-8 w-8 text-nexus-primary;
+    @apply h-7 w-7 text-accent;
   }
 
-  /* New UI styles for better visuals */
-  .card-gradient {
-    @apply bg-gradient-to-br from-card to-muted/50 backdrop-blur-sm;
+  /* Zendesk-style UI components */
+  .zendesk-card {
+    @apply bg-card border border-border/40 rounded-lg shadow-sm transition-all duration-200;
   }
 
-  .hover-card {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  .zendesk-header {
+    @apply text-lg font-medium text-foreground;
   }
 
-  .stats-card {
-    @apply hover-card border border-border/50 rounded-xl overflow-hidden;
+  .zendesk-subheader {
+    @apply text-sm font-normal text-muted-foreground;
+  }
+
+  .zendesk-sidebar-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-border/50 transition-colors;
+  }
+
+  .zendesk-sidebar-item.active {
+    @apply bg-sidebar-accent/20 text-sidebar-accent font-medium;
+  }
+
+  .zendesk-table {
+    @apply w-full text-sm text-foreground;
+  }
+
+  .zendesk-table thead {
+    @apply text-xs uppercase text-muted-foreground border-b;
+  }
+
+  .zendesk-table th {
+    @apply px-4 py-3 font-normal;
+  }
+
+  .zendesk-table td {
+    @apply px-4 py-3 border-b border-border/40;
+  }
+
+  .zendesk-input {
+    @apply bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring;
+  }
+
+  .zendesk-button-primary {
+    @apply bg-accent text-accent-foreground hover:bg-accent/90 px-4 py-2 rounded-md text-sm font-medium transition-colors;
+  }
+
+  .zendesk-button-secondary {
+    @apply bg-muted/20 text-foreground hover:bg-muted/30 px-4 py-2 rounded-md text-sm font-medium border border-border/40 transition-colors;
   }
 }

@@ -65,15 +65,19 @@ export default {
 				},
 				// Call center specific colors
 				call: {
-					active: '#10B981', // Green for active calls
-					waiting: '#F59E0B', // Amber for waiting calls
-					missed: '#EF4444', // Red for missed calls
-					completed: '#8B5CF6', // Updated to purple for completed calls
+					active: '#17494D', // Zendesk-style green
+					waiting: '#F79A3E', // Zendesk-style amber
+					missed: '#D93F4C', // Zendesk-style red
+					completed: '#3091EC', // Zendesk-style blue
 				},
-				nexus: {
-					primary: '#8B5CF6', // Updated to vibrant purple as primary brand color
-					secondary: '#7E69AB', // Darker purple as secondary brand color
-					accent: '#D946EF', // Vibrant pink as accent color
+				zendesk: {
+					primary: '#03363D', // Zendesk primary brand color
+					secondary: '#17494D', // Zendesk secondary color
+					accent: '#1F73B7', // Zendesk accent blue
+					highlight: '#F79A3E', // Zendesk highlight orange
+					background: '#F8F9F9', // Zendesk light background
+					card: '#FFFFFF', // Zendesk card background
+					muted: '#87929D', // Zendesk muted text
 				}
 			},
 			borderRadius: {
