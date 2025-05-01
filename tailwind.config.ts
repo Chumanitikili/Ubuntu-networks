@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,18 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Call center specific colors
+				call: {
+					active: '#10B981', // Green for active calls
+					waiting: '#F59E0B', // Amber for waiting calls
+					missed: '#EF4444', // Red for missed calls
+					completed: '#6366F1', // Indigo for completed calls
+				},
+				nexus: {
+					primary: '#0EA5E9', // Sky blue as primary brand color
+					secondary: '#0369A1', // Darker blue as secondary brand color
+					accent: '#14B8A6', // Teal as accent color
 				}
 			},
 			borderRadius: {
@@ -84,11 +97,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-ring': {
+					'0%': { transform: 'scale(0.8)', opacity: '0.8' },
+					'100%': { transform: 'scale(2)', opacity: '0' }
+				},
+				'bounce-soft': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-5px)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-ring': 'pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite',
+				'bounce-soft': 'bounce-soft 2s ease-in-out infinite'
 			}
 		}
 	},
