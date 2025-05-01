@@ -68,12 +68,12 @@ export default {
 					active: '#10B981', // Green for active calls
 					waiting: '#F59E0B', // Amber for waiting calls
 					missed: '#EF4444', // Red for missed calls
-					completed: '#6366F1', // Indigo for completed calls
+					completed: '#8B5CF6', // Updated to purple for completed calls
 				},
 				nexus: {
-					primary: '#0EA5E9', // Sky blue as primary brand color
-					secondary: '#0369A1', // Darker blue as secondary brand color
-					accent: '#14B8A6', // Teal as accent color
+					primary: '#8B5CF6', // Updated to vibrant purple as primary brand color
+					secondary: '#7E69AB', // Darker purple as secondary brand color
+					accent: '#D946EF', // Vibrant pink as accent color
 				}
 			},
 			borderRadius: {
