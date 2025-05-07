@@ -1,9 +1,10 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// These should be environment variables in a production setup
+// Update with correct credentials
 const supabaseUrl = 'https://ifbsahjcokiyisqkwhtg.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYnNhaGpjb2tpeWlzcWt3aHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODk5OTg2MDIsImV4cCI6MjAwNTU3NDYwMn0.jGpQk0h-TcYezFhPgcXEDJ36JXXrCyFzY7XVNibL3X8';
+// This is the actual project API key that needs to be corrected
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYnNhaGpjb2tpeWlzcWt3aHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTUxMTA2NTIsImV4cCI6MjAzMDY4NjY1Mn0.sYK6vUQf5IoKH2kuqExcq0SN4p5VJ_V_EqLEo9BI8HQ';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
