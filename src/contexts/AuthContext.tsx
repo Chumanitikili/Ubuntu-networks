@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import type { User, Session } from "@supabase/supabase-js";
+import type { User, Session, AuthError } from "@supabase/supabase-js";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { toast as sonnerToast } from "sonner";
@@ -116,26 +115,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error) {
         console.error("Sign in error:", error);
-        toast({
-          title: "Error signing in",
-          description: error.message,
-          variant: "destructive",
-        });
+        throw error;
       } else {
         console.log("Sign in successful:", data);
-        toast({
-          title: "Signed in successfully",
-          description: "Welcome back!",
+        sonnerToast.success("Signed in successfully", {
+          description: "Welcome back!"
         });
         navigate("/");
       }
     } catch (error) {
       console.error("Exception during sign in:", error);
-      toast({
-        title: "Error signing in",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      throw error; // Re-throw to be handled by the component
     } finally {
       setIsLoading(false);
     }

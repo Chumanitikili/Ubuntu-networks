@@ -12,19 +12,38 @@ import { toast } from "sonner";
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { signIn, isLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     try {
       console.log("Login attempt with:", email);
       await signIn(email, password);
-    } catch (error) {
+      // Success toast will be shown in AuthContext after successful login
+    } catch (error: any) {
       console.error("Login form error:", error);
       toast.error("Login failed", {
-        description: "Please check your credentials and try again."
+        description: error?.message || "Please check your credentials and try again."
       });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Test account information for easy access
+  const adminInfo = { email: "admin@smartcallnexus.com", password: "Admin123!" };
+  const testUserInfo = { email: "testuser@example.com", password: "User123!" };
+
+  const fillTestCredentials = (userType: "admin" | "test") => {
+    if (userType === "admin") {
+      setEmail(adminInfo.email);
+      setPassword(adminInfo.password);
+    } else {
+      setEmail(testUserInfo.email);
+      setPassword(testUserInfo.password);
     }
   };
 
@@ -74,10 +93,36 @@ export function Login() {
                 required
               />
             </div>
+            
+            <div className="pt-2">
+              <div className="text-xs text-muted-foreground mb-2">Quick Login:</div>
+              <div className="flex gap-2">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="text-xs flex-1"
+                  onClick={() => fillTestCredentials("admin")}
+                >
+                  Admin Login
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="text-xs flex-1"
+                  onClick={() => fillTestCredentials("test")}
+                >
+                  Test User Login
+                </Button>
+              </div>
+            </div>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <Button type="submit" className="w-full mb-4" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
+            <Button 
+              type="submit" 
+              className="w-full mb-4" 
+              disabled={isLoading || isSubmitting}
+            >
+              {isLoading || isSubmitting ? "Signing in..." : "Sign In"}
             </Button>
             <p className="text-sm text-center text-muted-foreground">
               Don't have an account?{" "}
