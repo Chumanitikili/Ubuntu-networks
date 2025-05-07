@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import type { User, Session } from "@supabase/supabase-js";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+import { toast as sonnerToast } from "sonner";
 
 export type UserRole = "superadmin" | "admin" | "customer";
 
@@ -63,6 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        console.log("Auth state changed:", _event);
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -109,23 +111,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      console.log("Signing in with:", email);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       
       if (error) {
+        console.error("Sign in error:", error);
         toast({
           title: "Error signing in",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log("Sign in successful:", data);
         toast({
           title: "Signed in successfully",
           description: "Welcome back!",
         });
-        navigate("/dashboard");
+        navigate("/");
       }
     } catch (error) {
-      console.error("Error during sign in:", error);
+      console.error("Exception during sign in:", error);
       toast({
         title: "Error signing in",
         description: "An unexpected error occurred",
@@ -191,7 +196,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toast({
         title: "Signed out successfully",
       });
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       console.error("Error during sign out:", error);
       toast({
@@ -205,11 +210,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const switchRole = (role: UserRole) => {
     if (profile && (profile.role === "superadmin" || (profile.role === "admin" && role === "customer"))) {
       setCurrentRole(role);
-      toast({
-        title: "Role switched",
-        description: `You are now viewing as ${role}`,
+      sonnerToast.success(`Switched to ${role} view`, { 
+        description: `You are now viewing as ${role}` 
       });
-      navigate("/dashboard");
+      navigate("/");
     }
   };
 

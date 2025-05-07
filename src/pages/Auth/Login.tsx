@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Phone } from "lucide-react";
+import { toast } from "sonner";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -15,7 +16,16 @@ export function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signIn(email, password);
+    
+    try {
+      console.log("Login attempt with:", email);
+      await signIn(email, password);
+    } catch (error) {
+      console.error("Login form error:", error);
+      toast.error("Login failed", {
+        description: "Please check your credentials and try again."
+      });
+    }
   };
 
   return (
