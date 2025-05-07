@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Phone,
   Users,
@@ -15,14 +17,18 @@ import {
   Home,
   HelpCircle,
   Search,
+  Building2,
+  ShieldCheck,
+  LogOut,
 } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SidebarProps {
   className?: string;
 }
 
 export function Sidebar({ className }: SidebarProps) {
+  const { isSuperAdmin, isAdmin, isCustomer, signOut } = useAuth();
+  const location = useLocation();
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
@@ -67,25 +73,67 @@ export function Sidebar({ className }: SidebarProps) {
       
       {/* Navigation items */}
       <div className="flex flex-col gap-1 p-2 overflow-y-auto flex-1">
-        <NavItem icon={<Home />} label="Dashboard" isCollapsed={isCollapsed} isActive={true} />
-        <NavItem icon={<Phone />} label="Call Center" isCollapsed={isCollapsed} />
-        <NavItem icon={<Users />} label="Agents" isCollapsed={isCollapsed} />
-        <NavItem icon={<MessageCircle />} label="Conversations" isCollapsed={isCollapsed} />
-        <NavItem icon={<Calendar />} label="Appointments" isCollapsed={isCollapsed} />
-        <NavItem icon={<BarChart2 />} label="Analytics" isCollapsed={isCollapsed} />
-        <NavItem icon={<Bot />} label="AI Assistant" isCollapsed={isCollapsed} />
+        <NavItem 
+          icon={<Home />} 
+          label="Dashboard" 
+          isCollapsed={isCollapsed} 
+          isActive={location.pathname === "/" || location.pathname === "/dashboard"}
+          to="/"
+        />
+        
+        {/* Show admin links only for admin users */}
+        {isAdmin && (
+          <>
+            <NavItem 
+              icon={<Building2 />} 
+              label="Accounts" 
+              isCollapsed={isCollapsed}
+              isActive={location.pathname === "/accounts"}
+              to="/accounts"
+            />
+          </>
+        )}
+        
+        {/* Show superadmin links only for superadmin users */}
+        {isSuperAdmin && (
+          <NavItem 
+            icon={<ShieldCheck />} 
+            label="Super Admin" 
+            isCollapsed={isCollapsed}
+            isActive={location.pathname === "/super-admin"}
+            to="/super-admin"
+          />
+        )}
+        
+        {/* Common navigation items */}
+        <NavItem icon={<Phone />} label="Call Center" isCollapsed={isCollapsed} to="/call-center" />
+        <NavItem icon={<Users />} label="Agents" isCollapsed={isCollapsed} to="/agents" />
+        <NavItem icon={<MessageCircle />} label="Conversations" isCollapsed={isCollapsed} to="/conversations" />
+        <NavItem icon={<Calendar />} label="Appointments" isCollapsed={isCollapsed} to="/appointments" />
+        <NavItem icon={<BarChart2 />} label="Analytics" isCollapsed={isCollapsed} to="/analytics" />
+        <NavItem icon={<Bot />} label="AI Assistant" isCollapsed={isCollapsed} to="/ai-assistant" />
         
         {/* Zendesk-like category separator */}
         <div className={cn("mt-4 mb-2 px-3", isCollapsed && "hidden")}>
-          <span className="text-xs font-medium uppercase text-sidebar-foreground/50">Admin</span>
+          <span className="text-xs font-medium uppercase text-sidebar-foreground/50">Settings</span>
         </div>
         
-        <NavItem icon={<Settings />} label="Settings" isCollapsed={isCollapsed} />
+        <NavItem icon={<Settings />} label="Settings" isCollapsed={isCollapsed} to="/settings" />
       </div>
       
       {/* Help section at bottom (Zendesk-like) */}
       <div className="p-2 border-t border-sidebar-border">
-        <NavItem icon={<HelpCircle />} label="Help & Support" isCollapsed={isCollapsed} />
+        <NavItem icon={<HelpCircle />} label="Help & Support" isCollapsed={isCollapsed} to="/help" />
+        <Button
+          variant="ghost"
+          className={cn(
+            "zendesk-sidebar-item w-full justify-start py-2 px-3 text-sidebar-foreground hover:bg-sidebar-hover"
+          )}
+          onClick={signOut}
+        >
+          <span className="text-sidebar-foreground"><LogOut className="h-4 w-4" /></span>
+          {!isCollapsed && <span className="ml-2">Sign Out</span>}
+        </Button>
       </div>
     </div>
   );
@@ -96,9 +144,10 @@ interface NavItemProps {
   label: string;
   isCollapsed: boolean;
   isActive?: boolean;
+  to: string;
 }
 
-function NavItem({ icon, label, isCollapsed, isActive }: NavItemProps) {
+function NavItem({ icon, label, isCollapsed, isActive, to }: NavItemProps) {
   return (
     <Button
       variant="ghost"
@@ -106,9 +155,24 @@ function NavItem({ icon, label, isCollapsed, isActive }: NavItemProps) {
         "zendesk-sidebar-item w-full justify-start py-2 px-3",
         isActive && "active"
       )}
+      asChild
     >
-      <span className="text-current">{icon}</span>
-      {!isCollapsed && <span>{label}</span>}
+      <Link to={to}>
+        <span className="text-current">{icon}</span>
+        {!isCollapsed && <span className="ml-2">{label}</span>}
+      </Link>
     </Button>
   );
+}
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useState(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  });
+
+  return isMobile;
 }
