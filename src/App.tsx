@@ -8,8 +8,12 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
 import NotFound from "./pages/NotFound";
 import AccountManagement from "./pages/Admin/AccountManagement";
+import TicketsList from "./pages/Tickets/TicketsList";
+import TicketDetail from "./pages/Tickets/TicketDetail";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +52,8 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/" element={
         <ProtectedRoute>
           <Index />
@@ -58,6 +64,16 @@ const AppRoutes = () => {
           <AdminRoute>
             <AccountManagement />
           </AdminRoute>
+        </ProtectedRoute>
+      } />
+      <Route path="/tickets" element={
+        <ProtectedRoute>
+          <TicketsList />
+        </ProtectedRoute>
+      } />
+      <Route path="/tickets/:ticketId" element={
+        <ProtectedRoute>
+          <TicketDetail />
         </ProtectedRoute>
       } />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -20,6 +20,8 @@ import {
   Building2,
   ShieldCheck,
   LogOut,
+  Ticket,
+  MessageSquare
 } from "lucide-react";
 
 interface SidebarProps {
@@ -81,6 +83,14 @@ export function Sidebar({ className }: SidebarProps) {
           to="/"
         />
         
+        <NavItem 
+          icon={<Ticket />} 
+          label="Tickets" 
+          isCollapsed={isCollapsed}
+          isActive={location.pathname.startsWith("/tickets")}
+          to="/tickets"
+        />
+        
         {/* Show admin links only for admin users */}
         {isAdmin && (
           <>
@@ -108,7 +118,7 @@ export function Sidebar({ className }: SidebarProps) {
         {/* Common navigation items */}
         <NavItem icon={<Phone />} label="Call Center" isCollapsed={isCollapsed} to="/call-center" />
         <NavItem icon={<Users />} label="Agents" isCollapsed={isCollapsed} to="/agents" />
-        <NavItem icon={<MessageCircle />} label="Conversations" isCollapsed={isCollapsed} to="/conversations" />
+        <NavItem icon={<MessageSquare />} label="Conversations" isCollapsed={isCollapsed} to="/conversations" />
         <NavItem icon={<Calendar />} label="Appointments" isCollapsed={isCollapsed} to="/appointments" />
         <NavItem icon={<BarChart2 />} label="Analytics" isCollapsed={isCollapsed} to="/analytics" />
         <NavItem icon={<Bot />} label="AI Assistant" isCollapsed={isCollapsed} to="/ai-assistant" />
