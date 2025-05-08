@@ -1,12 +1,11 @@
-
 import { createClient } from '@supabase/supabase-js';
 
 // Update with correct credentials
 const supabaseUrl = 'https://ifbsahjcokiyisqkwhtg.supabase.co';
-// This is the actual project API key that needs to be corrected
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYnNhaGpjb2tpeWlzcWt3aHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTUxMTA2NTIsImV4cCI6MjAzMDY4NjY1Mn0.sYK6vUQf5IoKH2kuqExcq0SN4p5VJ_V_EqLEo9BI8HQ';
+// Using service role API key for admin access
+const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYnNhaGpjb2tpeWlzcWt3aHRnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjEyODc0OSwiZXhwIjoyMDYxNzA0NzQ5fQ.EEm3Btkcbno-RDcrCb4lxfEqj3ZgTAUBvQwsK7bOyUY';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export type Database = {
   public: {
