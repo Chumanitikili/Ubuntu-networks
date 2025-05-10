@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer circle -->
+  <circle
+    cx="12"
+    cy="12"
+    r="10"
+    fill="none"
+    stroke="#2196F3"
+    stroke-width="2"
+    stroke-dasharray="4 2"
+  />
+  
+  <!-- Middle circle -->
+  <circle
+    cx="12"
+    cy="12"
+    r="7"
+    fill="none"
+    stroke="#2196F3"
+    stroke-width="1.5"
+    stroke-dasharray="3 1.5"
+  />
+  
+  <!-- Inner circle -->
+  <circle
+    cx="12"
+    cy="12"
+    r="4"
+    fill="none"
+    stroke="#2196F3"
+    stroke-width="1"
+    stroke-dasharray="2 1"
+  />
+  
+  <!-- Core -->
+  <circle
+    cx="12"
+    cy="12"
+    r="2"
+    fill="#2196F3"
+  />
+</svg>

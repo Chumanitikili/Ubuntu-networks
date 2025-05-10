@@ -4,7 +4,6 @@ import {
   Drawer,
   AppBar,
   Toolbar,
-  Typography,
   IconButton,
   List,
   ListItem,
@@ -16,6 +15,7 @@ import {
   MenuItem,
   styled,
 } from '@mui/material';
+import { LogoWithText } from '@/components/ui/logo-with-text';
 import {
   Menu as MenuIcon,
   Dashboard,
@@ -49,9 +49,9 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 const menuItems = [
   { text: 'Dashboard', icon: <Dashboard />, path: '/' },
-  { text: 'Call Center', icon: <Phone />, path: '/calls' },
+  { text: 'Network Monitor', icon: <Assessment />, path: '/monitor' },
   { text: 'Contacts', icon: <People />, path: '/contacts' },
-  { text: 'Analytics', icon: <Assessment />, path: '/analytics' },
+  { text: 'Support', icon: <Phone />, path: '/support' },
   { text: 'Settings', icon: <Settings />, path: '/settings' },
 ];
 
@@ -119,9 +119,9 @@ export default function Layout({ children }: LayoutProps) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, color: 'primary.main' }}>
-            Call Center Pro
-          </Typography>
+          <Box sx={{ flexGrow: 1 }}>
+            <LogoWithText />
+          </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <IconButton color="primary">
               <Badge badgeContent={4} color="error">
