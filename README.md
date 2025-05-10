@@ -1,73 +1,85 @@
-# Welcome to your Lovable project
+# Ubuntu Networks - Smart Call Center Management System
 
-## Project info
+## Overview
 
-**URL**: https://lovable.dev/projects/2883d4bb-9f7f-47ff-9f7d-7262d9a16d9f
+Ubuntu Networks is a modern call center management system built with cutting-edge web technologies. The application provides comprehensive tools for managing call center operations, including real-time call monitoring, agent performance tracking, and detailed analytics.
 
-## How can I edit this code?
+**Live Demo**: [https://smart-call-nexus.windsurf.build](https://smart-call-nexus.windsurf.build)
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- **Real-time Call Monitoring**: Track active calls and agent status in real-time
+- **Analytics Dashboard**: Comprehensive analytics and reporting tools
+- **Agent Management**: Track and manage agent performance and availability
+- **Ticket System**: Integrated ticket management system
+- **AI Assistant**: Smart AI-powered assistant for enhanced customer service
+- **Responsive Design**: Full mobile and desktop support
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2883d4bb-9f7f-47ff-9f7d-7262d9a16d9f) and start prompting.
+## Technology Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+This project is built with modern web technologies:
 
-**Use your preferred IDE**
+- **Frontend Framework**: React with TypeScript
+- **Build Tool**: Vite
+- **UI Components**: shadcn/ui
+- **Styling**: Tailwind CSS
+- **State Management**: React Context
+- **Authentication**: Supabase Auth
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
 
-Follow these steps:
+- Node.js 18 or higher
+- npm or yarn package manager
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Installation
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```bash
+# Clone the repository
+git clone <repository-url>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Navigate to project directory
+cd ubuntu-networks
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The development server will start at `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Build and Deployment
 
-**Use GitHub Codespaces**
+```bash
+# Create production build
+npm run build
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Preview production build locally
+npm run preview
+```
 
-## What technologies are used for this project?
+The application is deployed on Netlify. Each commit to the main branch triggers an automatic deployment.
 
-This project is built with:
+## Environment Variables
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Create a `.env` file in the root directory with the following variables:
 
-## How can I deploy this project?
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-Simply open [Lovable](https://lovable.dev/projects/2883d4bb-9f7f-47ff-9f7d-7262d9a16d9f) and click on Share -> Publish.
+## Contributing
 
-## Can I connect a custom domain to my Lovable project?
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Yes, you can!
+## License
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
