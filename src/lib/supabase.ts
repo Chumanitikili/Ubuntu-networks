@@ -10,6 +10,53 @@ export const supabase = createClient(supabaseUrl, supabaseServiceKey);
 export type Database = {
   public: {
     Tables: {
+      contacts: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          phone: string;
+          company: string;
+          position: string;
+          accountType: 'B2B' | 'B2C';
+          status: 'active' | 'inactive' | 'lead';
+          tags: string[];
+          notes: string[];
+          lastContact: string;
+          createdAt: string;
+          updatedAt: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          email: string;
+          phone?: string;
+          company?: string;
+          position?: string;
+          accountType: 'B2B' | 'B2C';
+          status: 'active' | 'inactive' | 'lead';
+          tags?: string[];
+          notes?: string[];
+          lastContact?: string;
+          createdAt?: string;
+          updatedAt?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          email?: string;
+          phone?: string;
+          company?: string;
+          position?: string;
+          accountType?: 'B2B' | 'B2C';
+          status?: 'active' | 'inactive' | 'lead';
+          tags?: string[];
+          notes?: string[];
+          lastContact?: string;
+          createdAt?: string;
+          updatedAt?: string;
+        };
+      };
       customers: {
         Row: {
           id: string;
