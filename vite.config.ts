@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import react from '@vitejs/plugin-react'
 import path from 'path'
 import { componentTagger } from 'lovable-tagger'
 
@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => ({
   },
   server: {
     port: 3000,
-    open: true
+    host: true
   },
   optimizeDeps: {
     include: ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled']

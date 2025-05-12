@@ -1,42 +1,29 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { theme } from './theme';
+import { DashboardLayout } from './components/dashboard/DashboardLayout';
+import { Dashboard } from './components/dashboard/Dashboard';
+import { CallCenter } from './components/call-center/CallCenter';
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { CallProvider } from "@/contexts/CallContext";
-import Layout from "@/components/Layout";
-import { AppRoutes } from "@/routes";
-
-// Configure React Query client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <AuthProvider>
-        <CallProvider>
-          <TooltipProvider>
-            <Layout>
-              <AppRoutes />
-              <Toaster />
-              <Sonner position="top-right" />
-            </Layout>
-          </TooltipProvider>
-        </CallProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </QueryClientProvider>
-);
+const App: React.FC = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <DashboardLayout>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/call-center" element={<CallCenter />} />
+            <Route path="/b2b" element={<CallCenter />} />
+            <Route path="/b2c" element={<CallCenter />} />
+          </Routes>
+        </DashboardLayout>
+      </Router>
+    </ThemeProvider>
+  );
+};
 
 export default App;

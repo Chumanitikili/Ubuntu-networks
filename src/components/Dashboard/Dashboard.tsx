@@ -1,141 +1,217 @@
-
-import { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import { DashboardHeader } from "./DashboardHeader";
-import { CallsChart } from "./CallsChart";
-import { ActiveCallsList } from "./ActiveCallsList";
-import { RecentCallsList } from "./RecentCallsList";
-import { AgentsList } from "./AgentsList";
-import { AIAssistantCard } from "./AIAssistantCard";
-import { InboundSimulator } from "../CallCenter/InboundSimulator";
-import { CallWorkflow } from "../CallCenter/CallWorkflow";
+import React from 'react';
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  LinearProgress,
+  useTheme,
+} from '@mui/material';
 import { 
-  sampleAgents,
-  sampleCalls,
-  sampleDashboardStats, 
-  sampleAIAssistants
-} from "@/utils/sample-data";
-import { Button } from "@/components/ui/button";
-import { Building2, Users } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+  TrendingUp as TrendingUpIcon,
+  Phone as PhoneIcon,
+  Business as BusinessIcon,
+  Person as PersonIcon,
+} from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 
-export default function Dashboard() {
-  const { user, isSuperAdmin, isAdmin, profile, switchRole } = useAuth();
-  const navigate = useNavigate();
-  const [customerView, setCustomerView] = useState<string>("all");
-  const [licenseDaysLeft, setLicenseDaysLeft] = useState<number | null>(null);
-  
-  useEffect(() => {
-    // In a real app, this would fetch customer and license data from API/database
-    const simulatedLicenseDaysLeft = 45;
-    setLicenseDaysLeft(simulatedLicenseDaysLeft);
-  }, []);
+const StyledCard = styled(Card)(({ theme }) => ({
+  height: '100%',
+  transition: 'transform 0.2s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-4px)',
+  },
+}));
 
-  const handleRoleSwitch = (value: string) => {
-    if (value === "admin") {
-      switchRole("admin");
-    } else if (value === "customer") {
-      switchRole("customer");
-    } else if (value === "superadmin" && isSuperAdmin) {
-      switchRole("superadmin");
-    }
-  };
+const MetricCard = ({ title, value, icon, color, progress }: {
+  title: string;
+  value: string;
+  icon: React.ReactNode;
+  color: string;
+  progress?: number;
+}) => {
+  const theme = useTheme();
 
   return (
-    <div className="p-5 md:p-6 space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-medium text-foreground mb-1">
-            Welcome{profile?.full_name ? `, ${profile.full_name}` : ""}
-          </h1>
-          <p className="text-muted-foreground text-sm">{user?.email}</p>
-        </div>
-        
-        {/* Admin controls */}
-        {isAdmin && (
-          <div className="flex flex-wrap items-center gap-3">
-            {licenseDaysLeft !== null && (
-              <Badge variant="outline" className="bg-primary/10 py-1.5">
-                License: {licenseDaysLeft} days remaining
-              </Badge>
-            )}
-            
-            {/* Customer View Selector (for admins) */}
-            {isSuperAdmin && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground whitespace-nowrap">View as:</span>
-                <Select value={isSuperAdmin ? "superadmin" : (isAdmin ? "admin" : "customer")} onValueChange={handleRoleSwitch}>
-                  <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="superadmin">Super Admin</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="customer">Customer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-            
-            <Button onClick={() => navigate("/accounts")} variant="outline" className="gap-2">
-              <Building2 className="h-4 w-4" />
-              <span>Manage Accounts</span>
-            </Button>
-            
-            <Button onClick={() => navigate("/users")} variant="outline" className="gap-2">
-              <Users className="h-4 w-4" />
-              <span>Manage Users</span>
-            </Button>
-          </div>
+    <StyledCard>
+      <CardContent>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Box
+            sx={{
+              backgroundColor: color + '20',
+              borderRadius: '50%',
+              p: 1,
+              mr: 2,
+            }}
+          >
+            {icon}
+          </Box>
+          <Typography variant="h6" color="text.secondary">
+            {title}
+          </Typography>
+        </Box>
+        <Typography variant="h4" component="div" sx={{ mb: 1 }}>
+          {value}
+        </Typography>
+        {progress !== undefined && (
+          <Box sx={{ mt: 2 }}>
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              sx={{
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: color + '20',
+                '& .MuiLinearProgress-bar': {
+                  backgroundColor: color,
+                },
+              }}
+            />
+          </Box>
         )}
-      </div>
-      
-      {/* Top stats bar */}
-      <div className="zendesk-card p-0 overflow-hidden">
-        <DashboardHeader stats={sampleDashboardStats} />
-      </div>
-      
-      {/* Main content grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
-        {/* Left column - 3/4 width */}
-        <div className="lg:col-span-3 space-y-5">
-          <div className="zendesk-card p-5">
-            <CallsChart stats={sampleDashboardStats} />
-          </div>
-          
-          <div className="zendesk-card p-5">
-            <RecentCallsList calls={sampleCalls} />
-          </div>
-        </div>
-        
-        {/* Right column - 1/4 width */}
-        <div className="space-y-5">
-          <div className="zendesk-card p-5">
-            <ActiveCallsList calls={sampleCalls} />
-          </div>
-          
-          <div className="zendesk-card p-5">
-            <AIAssistantCard assistant={sampleAIAssistants[0]} />
-          </div>
-          
-          <div className="zendesk-card p-5">
-            <InboundSimulator />
-          </div>
-        </div>
-      </div>
-      
-      {/* Bottom row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div className="zendesk-card p-5">
-          <AgentsList agents={sampleAgents} />
-        </div>
-        
-        <div className="zendesk-card p-5">
-          <CallWorkflow />
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </StyledCard>
   );
-}
+};
+
+export const Dashboard: React.FC = () => {
+  const theme = useTheme();
+
+  return (
+    <Box>
+      <Typography variant="h4" sx={{ mb: 4 }}>
+        Dashboard Overview
+      </Typography>
+
+      <Grid container spacing={3}>
+        {/* B2B Metrics */}
+        <Grid item xs={12} md={6}>
+          <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+            <BusinessIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
+            B2B Performance
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                title="Active Deals"
+                value="24"
+                icon={<BusinessIcon sx={{ color: theme.palette.primary.main }} />}
+                color={theme.palette.primary.main}
+                progress={75}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                title="Conversion Rate"
+                value="32%"
+                icon={<TrendingUpIcon sx={{ color: theme.palette.success.main }} />}
+                color={theme.palette.success.main}
+                progress={32}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        {/* B2C Metrics */}
+        <Grid item xs={12} md={6}>
+          <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+            <PersonIcon sx={{ mr: 1, color: theme.palette.secondary.main }} />
+            B2C Performance
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                title="Daily Calls"
+                value="156"
+                icon={<PhoneIcon sx={{ color: theme.palette.secondary.main }} />}
+                color={theme.palette.secondary.main}
+                progress={85}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                title="Satisfaction"
+                value="4.8/5"
+                icon={<TrendingUpIcon sx={{ color: theme.palette.warning.main }} />}
+                color={theme.palette.warning.main}
+                progress={96}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        {/* Recent Activity */}
+        <Grid item xs={12}>
+          <StyledCard>
+            <CardContent>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Recent Activity
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {[
+                  {
+                    type: 'B2B',
+                    title: 'New Enterprise Lead',
+                    description: 'Acme Corp requested a demo',
+                    time: '2 hours ago',
+                  },
+                  {
+                    type: 'B2C',
+                    title: 'Customer Support',
+                    description: 'Resolved ticket #1234',
+                    time: '3 hours ago',
+                  },
+                  {
+                    type: 'B2B',
+                    title: 'Contract Signed',
+                    description: 'TechStart Inc. - $50k deal',
+                    time: '5 hours ago',
+                  },
+                ].map((activity, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      p: 2,
+                      borderRadius: 1,
+                      backgroundColor: theme.palette.background.default,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        backgroundColor:
+                          activity.type === 'B2B'
+                            ? theme.palette.primary.main + '20'
+                            : theme.palette.secondary.main + '20',
+                        borderRadius: '50%',
+                        p: 1,
+                        mr: 2,
+                      }}
+                    >
+                      {activity.type === 'B2B' ? (
+                        <BusinessIcon sx={{ color: theme.palette.primary.main }} />
+                      ) : (
+                        <PersonIcon sx={{ color: theme.palette.secondary.main }} />
+                      )}
+                    </Box>
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="subtitle1">{activity.title}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {activity.description}
+                      </Typography>
+                    </Box>
+                    <Typography variant="caption" color="text.secondary">
+                      {activity.time}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </CardContent>
+          </StyledCard>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};

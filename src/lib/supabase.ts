@@ -1,11 +1,33 @@
 import { createClient } from '@supabase/supabase-js';
+import { Database } from '../types/database.types';
 
 // Update with correct credentials
 const supabaseUrl = 'https://ifbsahjcokiyisqkwhtg.supabase.co';
-// Using service role API key for admin access
-const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYnNhaGpjb2tpeWlzcWt3aHRnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjEyODc0OSwiZXhwIjoyMDYxNzA0NzQ5fQ.EEm3Btkcbno-RDcrCb4lxfEqj3ZgTAUBvQwsK7bOyUY';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-export const supabase = createClient(supabaseUrl, supabaseServiceKey);
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+
+export const getOrganizationSchema = (organizationId: string) => {
+  return `org_${organizationId}`;
+};
+
+export const createOrganizationDatabase = async (organizationId: string) => {
+  const schema = getOrganizationSchema(organizationId);
+  
+  // Create schema for organization
+  const { error: schemaError } = await supabase.rpc('create_organization_schema', {
+    schema_name: schema
+  });
+  
+  if (schemaError) throw schemaError;
+  
+  return schema;
+};
+
+export const getOrganizationClient = (organizationId: string) => {
+  const schema = getOrganizationSchema(organizationId);
+  return supabase.schema(schema);
+};
 
 export type Database = {
   public: {
