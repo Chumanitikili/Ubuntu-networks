@@ -23,7 +23,7 @@ const App: React.FC = () => {
         </DashboardLayout>
       </Router>
     </ThemeProvider>
-  );
+);
 };
 
 export default App;
