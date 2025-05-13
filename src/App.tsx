@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './theme';
-import { DashboardLayout } from './components/dashboard/DashboardLayout.tsx';
+import { DashboardLayout } from './components/dashboard/DashboardLayout';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { CallCenter } from './components/call-center/CallCenter';
 
