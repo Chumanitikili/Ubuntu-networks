@@ -37,6 +37,7 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
     boxSizing: 'border-box',
     backgroundColor: theme.palette.background.paper,
     borderRight: `1px solid ${theme.palette.divider}`,
+    boxShadow: '2px 0 5px rgba(0, 0, 0, 0.1)',
   },
 }));
 
@@ -44,7 +45,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
-  boxShadow: 'none',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
@@ -88,6 +89,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
               my: 0.5,
               '&:hover': {
                 backgroundColor: theme.palette.primary.light + '20',
+                transform: 'translateX(5px)',
+                transition: 'transform 0.3s ease',
               },
             }}
           >
