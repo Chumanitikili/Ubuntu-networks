@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './theme';
 import { DashboardLayout } from './components/Dashboard/DashboardLayout';
 import { Dashboard } from './components/Dashboard/Dashboard';
-import { CallCenter } from './components/CallCenter/CallCenter';
+import { CallCenter } from './components/call-center/CallCenter';
 
 const App: React.FC = () => {
   return (
