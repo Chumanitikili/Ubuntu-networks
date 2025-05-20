@@ -1,12 +1,20 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  functions = "netlify/functions"
   base = "/"
+
+[functions]
+  node_bundler = "esbuild"
 
 [build.environment]
   NODE_VERSION = "18"
+  VITE_TWILIO_ACCOUNT_SID = ""
+  VITE_TWILIO_AUTH_TOKEN = ""
+  VITE_TWILIO_PHONE_NUMBER = ""
+  VITE_API_URL = ""
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200

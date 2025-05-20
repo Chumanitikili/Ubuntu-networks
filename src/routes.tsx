@@ -4,6 +4,7 @@ import CallCenter from './pages/CallCenter';
 import Contacts from './pages/Contacts';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import AIReceptionist from './components/AIReceptionist';
 
 export default function AppRoutes() {
   return (
@@ -13,6 +14,7 @@ export default function AppRoutes() {
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/analytics" element={<Analytics />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/ai-receptionist" element={<AIReceptionist />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

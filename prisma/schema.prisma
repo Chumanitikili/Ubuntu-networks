@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(AGENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  calls         Call[]
+  sms           SMS[]
+  metrics       AgentMetrics[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Call {
+  id          String     @id @default(cuid())
+  phoneNumber String
+  status      CallStatus @default(INITIATED)
+  duration    Int?
+  startTime   DateTime   @default(now())
+  endTime     DateTime?
+  recordingUrl String?
+  transcript  String?    @db.Text
+  agentId     String?
+  agent       User?      @relation(fields: [agentId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model SMS {
+  id           String    @id @default(cuid())
+  phoneNumber  String
+  message      String    @db.Text
+  status       SMSStatus @default(SENT)
+  sentTime     DateTime  @default(now())
+  deliveredTime DateTime?
+  agentId      String?
+  agent        User?     @relation(fields: [agentId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model AgentMetrics {
+  id                    String   @id @default(cuid())
+  agentId              String
+  agent                User     @relation(fields: [agentId], references: [id])
+  totalCalls           Int      @default(0)
+  averageHandleTime    Int      @default(0)
+  customerSatisfaction Float    @default(0)
+  date                 DateTime @default(now())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  SUPERVISOR
+  AGENT
+}
+
+enum CallStatus {
+  INITIATED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  MISSED
+}
+
+enum SMSStatus {
+  SENT
+  DELIVERED
+  FAILED
+} 
