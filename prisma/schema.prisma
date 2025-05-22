@@ -22,6 +22,8 @@ model User {
   calls         Call[]
   sms           SMS[]
   metrics       AgentMetrics[]
+  campaignExecutions CampaignExecution[]
+  interactions      Interaction[]
 }
 
 model Account {
@@ -91,6 +93,64 @@ model AgentMetrics {
   updatedAt            DateTime @updatedAt
 }
 
+model Campaign {
+  id          String    @id @default(cuid())
+  name        String
+  type        CampaignType
+  status      CampaignStatus @default(DRAFT)
+  triggerConditions Json?
+  contentSequence Json?
+  metrics     Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  executions  CampaignExecution[]
+}
+
+model CampaignExecution {
+  id          String    @id @default(cuid())
+  campaignId  String
+  campaign    Campaign  @relation(fields: [campaignId], references: [id])
+  customerId  String
+  customer    User      @relation(fields: [customerId], references: [id])
+  currentStep Int       @default(0)
+  status      ExecutionStatus @default(ACTIVE)
+  nextActionAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model CallRecording {
+  id          String    @id @default(cuid())
+  callId      String
+  call        Call      @relation(fields: [callId], references: [id])
+  audioUrl    String
+  transcript  String?   @db.Text
+  createdAt   DateTime  @default(now())
+}
+
+model Interaction {
+  id          String    @id @default(cuid())
+  customerId  String
+  customer    User      @relation(fields: [customerId], references: [id])
+  type        InteractionType
+  direction   InteractionDirection
+  subject     String?
+  content     String?   @db.Text
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+}
+
+model KnowledgeArticle {
+  id          String    @id @default(cuid())
+  title       String
+  content     String    @db.Text
+  category    String
+  tags        String[]
+  vectorId    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 enum Role {
   ADMIN
   SUPERVISOR
@@ -109,4 +169,37 @@ enum SMSStatus {
   SENT
   DELIVERED
   FAILED
+}
+
+enum CampaignType {
+  EMAIL
+  SMS
+  PHONE
+  MIXED
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum ExecutionStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
+  FAILED
+}
+
+enum InteractionType {
+  CALL
+  EMAIL
+  CHAT
+  MEETING
+}
+
+enum InteractionDirection {
+  INBOUND
+  OUTBOUND
 } 

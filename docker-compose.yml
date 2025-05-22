@@ -92,10 +92,66 @@ services:
       - uptime_kuma_data:/app/data
     restart: always
 
+  # API Gateway
+  kong:
+    image: kong:3.4
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: "request-transformer,cors,rate-limiting,key-auth"
+    ports:
+      - "8000:8000"   # Admin API
+      - "8001:8001"   # Proxy
+    volumes:
+      - ./kong:/usr/local/kong
+    depends_on:
+      - redis
+
+  # Message Queue
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-guest}
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  # Service Discovery
+  consul:
+    image: consul:1.15
+    ports:
+      - "8500:8500"   # UI
+      - "8600:8600/udp" # DNS
+    command: agent -dev -client=0.0.0.0
+    volumes:
+      - consul_data:/consul/data
+
+  # Backend API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=${DATABASE_URL}
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASS:-guest}@rabbitmq:5672
+      - CONSUL_HTTP_ADDR=http://consul:8500
+    depends_on:
+      - rabbitmq
+      - consul
+    ports:
+      - "3000:3000"
+
 volumes:
   postgres_data:
   redis_data:
   minio_data:
   elasticsearch_data:
   grafana_data:
-  uptime_kuma_data: 
+  uptime_kuma_data:
+  rabbitmq_data:
+  consul_data: 
