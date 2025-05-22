@@ -111,7 +111,7 @@ async function generateAutomatedResponse(analysis: any): Promise<string> {
     technical: 'I can help you with technical issues. Could you please describe the problem you're experiencing in more detail?',
     sales: 'Thank you for your interest in our products. I can provide information about our current offerings and promotions. What specific product are you interested in?',
     complaint: 'I understand you have a concern. Please let me know more about the issue, and I'll do my best to help you resolve it.',
-    general: 'How can I assist you today? Please provide more details about what you need help with.',
+    general: 'How can I assist you today? Please provide more details about what you need help with.'
   };
 
   return responses[intent] || responses.general;
