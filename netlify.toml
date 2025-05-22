@@ -1,18 +1,18 @@
 [build]
   command = "npm run build"
-  publish = "dist"
+  publish = ".next"
   functions = "netlify/functions"
-  base = "/"
+  base = "."
 
 [functions]
   node_bundler = "esbuild"
 
 [build.environment]
   NODE_VERSION = "18"
-  VITE_TWILIO_ACCOUNT_SID = ""
-  VITE_TWILIO_AUTH_TOKEN = ""
-  VITE_TWILIO_PHONE_NUMBER = ""
-  VITE_API_URL = ""
+  NEXT_PUBLIC_TWILIO_ACCOUNT_SID = ""
+  NEXT_PUBLIC_TWILIO_AUTH_TOKEN = ""
+  NEXT_PUBLIC_TWILIO_PHONE_NUMBER = ""
+  NEXT_PUBLIC_API_URL = ""
 
 [[redirects]]
   from = "/api/*"
