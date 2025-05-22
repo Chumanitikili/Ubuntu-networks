@@ -4,9 +4,6 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
-  experimental: {
-    serverActions: true,
-  },
   env: {
     REDIS_URL: process.env.REDIS_URL,
     MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
@@ -24,4 +21,4 @@ const nextConfig = {
   },
 }
 
-export default nextConfig 
+module.exports = nextConfig 
