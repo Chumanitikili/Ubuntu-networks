@@ -5,8 +5,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
 const twilioClient = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
+  process.env.TWILIO_ACCOUNT_SID!,
+  process.env.TWILIO_AUTH_TOKEN!
 );
 
 export async function POST(req: NextRequest) {
@@ -108,9 +108,9 @@ async function generateAutomatedResponse(analysis: any): Promise<string> {
 
   const responses: Record<string, string> = {
     billing: 'For billing inquiries, you can check your balance and make payments through our website or mobile app. Would you like me to guide you through the process?',
-    technical: 'I can help you with technical issues. Could you please describe the problem you're experiencing in more detail?',
+    technical: 'I can help you with technical issues. Could you please describe the problem you are experiencing in more detail?',
     sales: 'Thank you for your interest in our products. I can provide information about our current offerings and promotions. What specific product are you interested in?',
-    complaint: 'I understand you have a concern. Please let me know more about the issue, and I'll do my best to help you resolve it.',
+    complaint: 'I understand you have a concern. Please let me know more about the issue, and I will do my best to help you resolve it.',
     general: 'How can I assist you today? Please provide more details about what you need help with.'
   };
 
