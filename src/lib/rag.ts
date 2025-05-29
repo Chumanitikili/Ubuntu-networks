@@ -1,10 +1,10 @@
 import { OpenAI } from 'openai';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-import { Chroma } from 'langchain/vectorstores/chroma';
-import { HuggingFaceInferenceEmbeddings } from 'langchain/embeddings/hf';
+import { Chroma } from '@langchain/community/vectorstores/chroma';
+import { HuggingFaceInferenceEmbeddings } from '@langchain/community/embeddings/hf';
 import { RetrievalQAChain } from 'langchain/chains';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
-import { UnstructuredMarkdownLoader } from 'langchain/document_loaders/fs/unstructured';
+import { TextLoader } from 'langchain/document_loaders/fs/text';
 import logger from './logger';
 
 const openai = new OpenAI({
@@ -28,7 +28,7 @@ class RAGService {
     try {
       // 1. Load documents
       const loader = new DirectoryLoader(knowledgeDir, {
-        '.md': (path) => new UnstructuredMarkdownLoader(path),
+        '.md': (path) => new TextLoader(path),
       });
       const documents = await loader.load();
 
