@@ -6,18 +6,16 @@
 [build.environment]
   PYTHON_VERSION = "3.11.7"
   NODE_VERSION = "18.17.0"
+  NEXT_PUBLIC_TWILIO_ACCOUNT_SID = ""
+  NEXT_PUBLIC_TWILIO_AUTH_TOKEN = ""
+  NEXT_PUBLIC_TWILIO_PHONE_NUMBER = ""
+  NEXT_PUBLIC_API_URL = ""
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 [functions]
   node_bundler = "esbuild"
-
-[build.environment]
-  NEXT_PUBLIC_TWILIO_ACCOUNT_SID = ""
-  NEXT_PUBLIC_TWILIO_AUTH_TOKEN = ""
-  NEXT_PUBLIC_TWILIO_PHONE_NUMBER = ""
-  NEXT_PUBLIC_API_URL = ""
 
 [[redirects]]
   from = "/api/*"
