@@ -19,6 +19,15 @@ const nextConfig = {
     OLLAMA_API_URL: process.env.OLLAMA_API_URL,
     QDRANT_URL: process.env.QDRANT_URL,
   },
+  webpack: (config, { isServer }) => {
+    // Handle undici module
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      "undici": false,
+    };
+
+    return config;
+  },
 }
 
 module.exports = nextConfig 

@@ -1,7 +1,7 @@
 import { OpenAI } from 'openai';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-import { Chroma } from '@langchain/chroma';
-import { HuggingFaceInferenceEmbeddings } from '@langchain/huggingface';
+import { Chroma } from 'langchain/vectorstores/chroma';
+import { HuggingFaceInferenceEmbeddings } from 'langchain/embeddings/hf';
 import { RetrievalQAChain } from 'langchain/chains';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { MarkdownLoader } from 'langchain/document_loaders/fs/markdown';
