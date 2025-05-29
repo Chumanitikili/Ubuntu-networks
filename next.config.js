@@ -24,7 +24,25 @@ const nextConfig = {
     config.resolve.fallback = {
       ...config.resolve.fallback,
       "undici": false,
+      "fs": false,
+      "path": false,
+      "os": false,
     };
+
+    // Handle https URLs
+    config.module.rules.push({
+      test: /\.(m?js|node)$/,
+      parser: { amd: false },
+      use: {
+        loader: '@vercel/webpack-asset-relocator-loader',
+        options: {
+          outputAssetBase: 'assets',
+          existingAssetBase: 'assets',
+          wrapperCompatibility: true,
+          production: true,
+        },
+      },
+    });
 
     return config;
   },
