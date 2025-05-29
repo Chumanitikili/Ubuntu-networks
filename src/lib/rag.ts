@@ -1,7 +1,7 @@
 import { OpenAI } from 'openai';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-import { Chroma } from 'langchain/vectorstores/chroma';
-import { HuggingFaceEmbeddings } from 'langchain/embeddings/hf';
+import { Chroma } from '@langchain/chroma';
+import { HuggingFaceInferenceEmbeddings } from '@langchain/huggingface';
 import { RetrievalQAChain } from 'langchain/chains';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { MarkdownLoader } from 'langchain/document_loaders/fs/markdown';
@@ -40,7 +40,7 @@ class RAGService {
       const texts = await textSplitter.splitDocuments(documents);
 
       // 3. Create embeddings
-      const embeddings = new HuggingFaceEmbeddings({
+      const embeddings = new HuggingFaceInferenceEmbeddings({
         modelName: 'sentence-transformers/all-MiniLM-L6-v2',
       });
 
