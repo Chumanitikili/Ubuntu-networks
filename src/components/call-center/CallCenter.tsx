@@ -1,230 +1,177 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Grid,
-  Card,
-  CardContent,
+  Paper,
   Typography,
   Button,
-  TextField,
-  IconButton,
-  Chip,
-  Avatar,
-  useTheme,
+  Grid,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
-import {
-  Phone as PhoneIcon,
-  PhoneDisabled as PhoneDisabledIcon,
-  Mic as MicIcon,
-  MicOff as MicOffIcon,
-  Headset as HeadsetIcon,
-  HeadsetOff as HeadsetOffIcon,
-  Chat as ChatIcon,
-  Business as BusinessIcon,
-  Person as PersonIcon,
-} from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
+import { Phone, PhoneOff, Mic, MicOff } from '@mui/icons-material';
+import { logger } from '@/utils/logger';
 
-const StyledCard = styled(Card)(({ theme }) => ({
-  height: '100%',
-  backgroundColor: theme.palette.background.paper,
-  borderRadius: 12,
-  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-}));
-
-const CallButton = styled(Button)(({ theme }) => ({
-  borderRadius: '50%',
-  width: 64,
-  height: 64,
-  minWidth: 64,
-  padding: 0,
-  '&.active': {
-    backgroundColor: theme.palette.error.main,
-    '&:hover': {
-      backgroundColor: theme.palette.error.dark,
-    },
-  },
-}));
-
-const ControlButton = styled(IconButton)(({ theme }) => ({
-  width: 48,
-  height: 48,
-  border: `1px solid ${theme.palette.divider}`,
-  '&:hover': {
-    backgroundColor: theme.palette.primary.light + '20',
-  },
-}));
+interface CallState {
+  isActive: boolean;
+  isRecording: boolean;
+  callerId: string;
+  duration: number;
+  transcription: string;
+}
 
 export const CallCenter: React.FC = () => {
-  const theme = useTheme();
-  const [isCallActive, setIsCallActive] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isHeadsetOn, setIsHeadsetOn] = useState(true);
-  const [callType, setCallType] = useState<'B2B' | 'B2C'>('B2B');
+  const [callState, setCallState] = useState<CallState>({
+    isActive: false,
+    isRecording: false,
+    callerId: '',
+    duration: 0,
+    transcription: '',
+  });
 
-  const handleCallToggle = () => {
-    setIsCallActive(!isCallActive);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (callState.isActive) {
+      timer = setInterval(() => {
+        setCallState(prev => ({
+          ...prev,
+          duration: prev.duration + 1
+        }));
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [callState.isActive]);
+
+  const formatDuration = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleMuteToggle = () => {
-    setIsMuted(!isMuted);
+  const handleStartCall = async () => {
+    try {
+      setError(null);
+      const response = await fetch('/api/twilio/voice/start', {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to start call');
+      }
+
+      const data = await response.json();
+      setCallState({
+        isActive: true,
+        isRecording: false,
+        callerId: data.callerId,
+        duration: 0,
+        transcription: '',
+      });
+    } catch (err) {
+      logger.error('Error starting call:', err);
+      setError('Failed to start call. Please try again.');
+    }
   };
 
-  const handleHeadsetToggle = () => {
-    setIsHeadsetOn(!isHeadsetOn);
+  const handleEndCall = async () => {
+    try {
+      setError(null);
+      const response = await fetch('/api/twilio/voice/end', {
+        method: 'POST',
+        body: JSON.stringify({ callSid: callState.callerId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to end call');
+      }
+
+      setCallState({
+        isActive: false,
+        isRecording: false,
+        callerId: '',
+        duration: 0,
+        transcription: '',
+      });
+    } catch (err) {
+      logger.error('Error ending call:', err);
+      setError('Failed to end call. Please try again.');
+    }
+  };
+
+  const toggleRecording = () => {
+    setCallState(prev => ({
+      ...prev,
+      isRecording: !prev.isRecording
+    }));
   };
 
   return (
-    <Box>
-      <Typography variant="h4" sx={{ mb: 4 }}>
-        Call Center
-      </Typography>
+    <Box sx={{ p: 3 }}>
+      <Paper elevation={3} sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Call Center
+        </Typography>
 
-      <Grid container spacing={3}>
-        {/* Active Call Panel */}
-        <Grid item xs={12} md={8}>
-          <StyledCard>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                <Chip
-                  icon={callType === 'B2B' ? <BusinessIcon /> : <PersonIcon />}
-                  label={callType}
-                  color={callType === 'B2B' ? 'primary' : 'secondary'}
-                  sx={{ mr: 2 }}
-                />
-                <Typography variant="h6">Active Call</Typography>
-              </Box>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
 
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  py: 4,
-                }}
+        <Grid container spacing={3} alignItems="center" justifyContent="center">
+          <Grid item xs={12} textAlign="center">
+            <Typography variant="h6" color="text.secondary">
+              {callState.isActive
+                ? `Call in progress - ${formatDuration(callState.duration)}`
+                : 'No active call'}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} textAlign="center">
+            <Button
+              variant="contained"
+              color={callState.isActive ? 'error' : 'primary'}
+              startIcon={callState.isActive ? <PhoneOff /> : <Phone />}
+              onClick={callState.isActive ? handleEndCall : handleStartCall}
+              disabled={callState.isRecording}
+              sx={{ mr: 2 }}
+            >
+              {callState.isActive ? 'End Call' : 'Start Call'}
+            </Button>
+
+            {callState.isActive && (
+              <Button
+                variant="outlined"
+                color={callState.isRecording ? 'error' : 'primary'}
+                startIcon={callState.isRecording ? <MicOff /> : <Mic />}
+                onClick={toggleRecording}
               >
-                <Avatar
-                  sx={{
-                    width: 120,
-                    height: 120,
-                    mb: 3,
-                    bgcolor: callType === 'B2B' ? 'primary.main' : 'secondary.main',
-                  }}
-                >
-                  {callType === 'B2B' ? <BusinessIcon sx={{ fontSize: 60 }} /> : <PersonIcon sx={{ fontSize: 60 }} />}
-                </Avatar>
+                {callState.isRecording ? 'Stop Recording' : 'Start Recording'}
+              </Button>
+            )}
+          </Grid>
 
-                <Typography variant="h5" sx={{ mb: 1 }}>
-                  {callType === 'B2B' ? 'Acme Corporation' : 'John Smith'}
+          {callState.isActive && callState.transcription && (
+            <Grid item xs={12}>
+              <Paper variant="outlined" sx={{ p: 2 }}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Transcription:
                 </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-                  {callType === 'B2B' ? '+1 (555) 123-4567' : '+1 (555) 987-6543'}
+                <Typography variant="body1">
+                  {callState.transcription}
                 </Typography>
+              </Paper>
+            </Grid>
+          )}
 
-                <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-                  <ControlButton
-                    onClick={handleMuteToggle}
-                    color={isMuted ? 'error' : 'default'}
-                  >
-                    {isMuted ? <MicOffIcon /> : <MicIcon />}
-                  </ControlButton>
-                  <CallButton
-                    variant="contained"
-                    color={isCallActive ? 'error' : 'primary'}
-                    onClick={handleCallToggle}
-                    className={isCallActive ? 'active' : ''}
-                  >
-                    {isCallActive ? <PhoneDisabledIcon /> : <PhoneIcon />}
-                  </CallButton>
-                  <ControlButton
-                    onClick={handleHeadsetToggle}
-                    color={!isHeadsetOn ? 'error' : 'default'}
-                  >
-                    {isHeadsetOn ? <HeadsetIcon /> : <HeadsetOffIcon />}
-                  </ControlButton>
-                </Box>
-
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={4}
-                  placeholder="Call notes..."
-                  variant="outlined"
-                />
-              </Box>
-            </CardContent>
-          </StyledCard>
+          {callState.isActive && (
+            <Grid item xs={12} textAlign="center">
+              <CircularProgress size={24} />
+            </Grid>
+          )}
         </Grid>
-
-        {/* Call Queue */}
-        <Grid item xs={12} md={4}>
-          <StyledCard>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 3 }}>
-                Call Queue
-              </Typography>
-
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {[
-                  {
-                    type: 'B2B',
-                    name: 'TechStart Inc.',
-                    phone: '+1 (555) 111-2222',
-                    waitTime: '2 min',
-                  },
-                  {
-                    type: 'B2C',
-                    name: 'Sarah Johnson',
-                    phone: '+1 (555) 333-4444',
-                    waitTime: '1 min',
-                  },
-                  {
-                    type: 'B2B',
-                    name: 'Global Corp',
-                    phone: '+1 (555) 555-6666',
-                    waitTime: '3 min',
-                  },
-                ].map((call, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      p: 2,
-                      borderRadius: 1,
-                      backgroundColor: theme.palette.background.default,
-                      cursor: 'pointer',
-                      '&:hover': {
-                        backgroundColor: theme.palette.primary.light + '20',
-                      },
-                    }}
-                  >
-                    <Avatar
-                      sx={{
-                        bgcolor: call.type === 'B2B' ? 'primary.main' : 'secondary.main',
-                        mr: 2,
-                      }}
-                    >
-                      {call.type === 'B2B' ? <BusinessIcon /> : <PersonIcon />}
-                    </Avatar>
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="subtitle1">{call.name}</Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {call.phone}
-                      </Typography>
-                    </Box>
-                    <Chip
-                      label={call.waitTime}
-                      size="small"
-                      color={call.type === 'B2B' ? 'primary' : 'secondary'}
-                    />
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </StyledCard>
-        </Grid>
-      </Grid>
+      </Paper>
     </Box>
   );
 }; 

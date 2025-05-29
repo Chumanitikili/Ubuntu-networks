@@ -2,13 +2,18 @@
   command = "npm run build"
   publish = ".next"
   functions = "netlify/functions"
-  base = "."
+
+[build.environment]
+  PYTHON_VERSION = "3.11.7"
+  NODE_VERSION = "18.17.0"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [functions]
   node_bundler = "esbuild"
 
 [build.environment]
-  NODE_VERSION = "18"
   NEXT_PUBLIC_TWILIO_ACCOUNT_SID = ""
   NEXT_PUBLIC_TWILIO_AUTH_TOKEN = ""
   NEXT_PUBLIC_TWILIO_PHONE_NUMBER = ""
