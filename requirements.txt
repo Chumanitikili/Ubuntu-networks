@@ -5,10 +5,8 @@ twilio==8.12.0
 python-dotenv==1.0.1
 fastapi==0.109.2
 uvicorn==0.27.1
-pydantic>=2.6.1,<2.11.2
-unstructured==0.12.4
-unstructured-client==0.32.4
-aiofiles>=24.1.0
-cryptography>=3.1
-eval-type-backport>=0.2.0
-nest-asyncio>=1.6.0 
+pydantic==2.10.1
+aiofiles==24.1.0
+cryptography==41.0.7
+eval-type-backport==0.2.2
+nest-asyncio==1.6.0 
