@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
+  transpilePackages: ['undici'],
   env: {
     REDIS_URL: process.env.REDIS_URL,
     MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
@@ -20,31 +21,29 @@ const nextConfig = {
     QDRANT_URL: process.env.QDRANT_URL,
   },
   webpack: (config, { isServer }) => {
-    // Handle undici module
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      "undici": false,
-      "fs": false,
-      "path": false,
-      "os": false,
-    };
-
-    // Handle https URLs
+    // Handle HTTPS URIs
     config.module.rules.push({
-      test: /\.(m?js|node)$/,
-      parser: { amd: false },
+      test: /\.(js|mjs|jsx|ts|tsx)$/,
+      include: /node_modules/,
       use: {
-        loader: '@vercel/webpack-asset-relocator-loader',
+        loader: 'babel-loader',
         options: {
-          outputAssetBase: 'assets',
-          existingAssetBase: 'assets',
-          wrapperCompatibility: true,
-          production: true,
+          presets: ['@babel/preset-env'],
         },
       },
     });
 
+    // Add fallback for chromadb-default-embed
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      'chromadb-default-embed': false,
+    };
+
     return config;
+  },
+  // Increase the build timeout
+  experimental: {
+    serverComponentsExternalPackages: ['chromadb'],
   },
 }
 

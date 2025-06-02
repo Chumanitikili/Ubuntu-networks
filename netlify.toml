@@ -10,6 +10,8 @@
   NEXT_PUBLIC_TWILIO_AUTH_TOKEN = ""
   NEXT_PUBLIC_TWILIO_PHONE_NUMBER = ""
   NEXT_PUBLIC_API_URL = ""
+  NPM_FLAGS = "--legacy-peer-deps"
+  PIP_FLAGS = "--no-cache-dir"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
